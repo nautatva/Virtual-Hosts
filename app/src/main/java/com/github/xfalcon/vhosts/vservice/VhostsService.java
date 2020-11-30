@@ -130,14 +130,17 @@ public class VhostsService extends VpnService {
 
     private void setupHostFile() {
         SharedPreferences settings = getSharedPreferences(VhostsActivity.PREFS_NAME, Context.MODE_PRIVATE);
-        boolean is_local = settings.getBoolean(VhostsActivity.IS_LOCAL, true);
+        boolean is_local = settings.getBoolean(VhostsActivity.IS_LOCAL, false);
 
         String uri_path = settings.getString(VhostsActivity.HOSTS_URI, null);
         try {
             final InputStream inputStream;
+            /*
             if (is_local)
                 inputStream = getContentResolver().openInputStream(Uri.parse(uri_path));
             else inputStream = openFileInput(VhostsActivity.NET_HOST_FILE);
+            */
+            inputStream = openFileInput(VhostsActivity.NET_HOST_FILE);
 
             new Thread() {
                 public void run() {

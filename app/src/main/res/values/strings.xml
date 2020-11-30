@@ -8,8 +8,8 @@
     <string name="backup_hosts">backup hosts</string>
     <string name="start_vpn">start vpn</string>
     <string name="stop_vpn">stop vpn</string>
-    <string name="re_select_hosts">Re-select Hosts File</string>
-    <string name="select_hosts">Select Hosts File</string>
+    <string name="re_select_hosts">Customize Personal Settings</string>
+    <string name="select_hosts">Create Personal Settings</string>
     <string name="info">supports wildcard DNS records,Example:\nabc.com\nm.abc.com\nweb.abc.com\n=>.abc.com</string>
     <string name="dialog_title">
         <font color="@color/primary_text">Please Select Hosts File</font>

@@ -25,6 +25,7 @@ import static com.github.xfalcon.vhosts.VhostsActivity.PREFS_NAME;
 
 public class AdvanceActivity extends AppCompatActivity {
     private static final String TAG = AdvanceActivity.class.getSimpleName();
+    public static final String default_hosts = "https://adaway.org/hosts.txt";
     private Handler handler=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +38,42 @@ public class AdvanceActivity extends AppCompatActivity {
         final EditText url_edit_text = findViewById(R.id.url_edit_text);
         final RadioGroup ln_radio_group = findViewById(R.id.ln_radio_group);
         final ImageButton down_button = findViewById(R.id.down_button);
+        local_radio_button.setEnabled(false);
+        net_radio_button.setEnabled(false);
+        url_edit_text.setEnabled(false);
+        down_button.setEnabled(false);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
+        final String adAwayHostsUrl = "https://adaway.org/hosts.txt";
+        final String someoneWhoCaresHostsUrl = "https://someonewhocares.org/hosts/hosts";
+        final RadioButton adAwayCheckBox = findViewById(R.id.radioAdAway);
+        final RadioButton someoneWhoCaresCheckBox = findViewById(R.id.radioButton);
+        final RadioButton useURLCheckBox = findViewById(R.id.radioButtonUseUrl);
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        url_edit_text.setText(settings.getString(VhostsActivity.HOSTS_URL,"https://raw.githubusercontent.com/x-falcon/tools/master/hosts"));
+        url_edit_text.setText(settings.getString(VhostsActivity.HOSTS_URL,"https://adaway.org/hosts.txt"));
         url_edit_text.setSelection(4);
         boolean isLocal = settings.getBoolean(IS_LOCAL, true);
         if (isLocal) local_radio_button.setChecked(true);
         else net_radio_button.setChecked(true);
         handler=new Handler();
+
+        findViewById(R.id.radioButtonUseUrl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(useURLCheckBox.isChecked()){
+                    local_radio_button.setEnabled(true);
+                    net_radio_button.setEnabled(true);
+                    url_edit_text.setEnabled(true);
+                    //down_button.setEnabled(true);
+                }
+                else{
+                    local_radio_button.setEnabled(false);
+                    net_radio_button.setEnabled(false);
+                    url_edit_text.setEnabled(false);
+                    //down_button.setEnabled(false);
+                }
+
+            }
+        });
 
         confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +93,14 @@ public class AdvanceActivity extends AppCompatActivity {
                         public void run() {
                             Looper.prepare();
                             try {
+                                /*
+                                if(adAwayCheckBox.isChecked()){
+                                    url_edit_text.setText(adAwayHostsUrl);
+                                }
+                                else if(someoneWhoCaresCheckBox.isChecked()){
+                                    url_edit_text.setText(someoneWhoCaresHostsUrl);
+                                }
+                                */
                                 String result = HttpUtils.get(url_edit_text.getText().toString());
                                 FileUtils.writeFile(openFileOutput(VhostsActivity.NET_HOST_FILE, Context.MODE_PRIVATE), result);
                                 Toast.makeText(getApplication(), String.format(getString(R.string.down_success), DnsChange.handle_hosts(openFileInput(VhostsActivity.NET_HOST_FILE))), Toast.LENGTH_LONG).show();

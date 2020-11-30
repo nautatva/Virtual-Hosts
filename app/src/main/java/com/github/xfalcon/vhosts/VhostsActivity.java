@@ -67,8 +67,8 @@ public class VhostsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vhosts);
         LogUtils.context = getApplicationContext();
         final SwitchButton vpnButton = findViewById(R.id.button_start_vpn);
-
         final Button selectHosts = findViewById(R.id.button_select_hosts);
+        selectHosts.setVisibility(View.GONE);
         final FloatingActionButton fab_boot = findViewById(R.id.fab_boot);
         final FloatingActionButton fab_donation = findViewById(R.id.fab_donation);
         if (checkHostUri() == -1) {
@@ -81,11 +81,7 @@ public class VhostsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                 if (isChecked) {
-                    if (checkHostUri() == -1) {
-                        showDialog();
-                    } else {
-                        startVPN();
-                    }
+                    startVPN();
                 } else {
                     shutdownVPN();
                 }
@@ -104,12 +100,21 @@ public class VhostsActivity extends AppCompatActivity {
                 }
             }
         });
-        selectHosts.setOnClickListener(new View.OnClickListener() {
+        /*selectHosts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectFile();
             }
         });
+        */
+        selectHosts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), AdvanceActivity.class));
+
+            }
+        });
+
         selectHosts.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
