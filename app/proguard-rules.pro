@@ -21,9 +21,9 @@
     public static *** e(...);
     public static *** i(...);
     public static *** v(...);
-    public static *** println(...);
+#    public static *** println(...);
     public static *** w(...);
-    public static *** wtf(...);
+#    public static *** wtf(...);
 }
 
 -keep class com.baidu.bottom.** { *; }

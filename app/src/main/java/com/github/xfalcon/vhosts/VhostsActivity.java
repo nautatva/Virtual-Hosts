@@ -226,8 +226,8 @@ public class VhostsActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
         Uri uri = intent.getData();
-        final int takeFlags = intent.getFlags()
-                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+        final int takeFlags = // intent.getFlags() &
+                (Intent.FLAG_GRANT_READ_URI_PERMISSION
                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         try {
             getContentResolver().takePersistableUriPermission(uri, takeFlags);
