@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.github.stealthcopter:AndroidNetworkTools:0.4.5.3'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

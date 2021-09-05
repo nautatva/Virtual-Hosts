@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,7 +104,7 @@ public class DnsChange {
 
     }
 
-    public static int handle_hosts(InputStream inputStream) {
+    public static int handle_hosts(InputStream inputStream, Map<String, String> extraHosts) {
         String STR_COMMENT = "#";
         String HOST_PATTERN_STR = "^\\s*(" + STR_COMMENT + "?)\\s*(\\S*)\\s*([^" + STR_COMMENT + "]*)" + STR_COMMENT + "?(.*)$";
         Pattern HOST_PATTERN = Pattern.compile(HOST_PATTERN_STR);
@@ -129,6 +130,11 @@ public class DnsChange {
             }
             reader.close();
             inputStream.close();
+            if (extraHosts!=null) {
+                for (Map.Entry<String, String> entry : extraHosts.entrySet()) {
+                    addHost(entry.getKey(), entry.getValue());
+                }
+            }
             LogUtils.d(TAG, DOMAINS_IP_MAPS4.toString());
             LogUtils.d(TAG, DOMAINS_IP_MAPS6.toString());
             return DOMAINS_IP_MAPS4.size() + DOMAINS_IP_MAPS6.size();

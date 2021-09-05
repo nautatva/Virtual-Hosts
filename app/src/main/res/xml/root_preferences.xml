@@ -21,6 +21,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Scan hostnames and put in hosts">
+        <SwitchPreferenceCompat
+            app:key="localhost_append"
+            app:summaryOff="Not appending localhost"
+            app:summaryOn="Not appending localhost"
+            app:title="Append localhosts" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/debug_header">
         <SwitchPreferenceCompat
             app:key="developer_mode"
@@ -28,5 +36,4 @@
             app:summaryOn="@string/developer_mode_on"
             app:title="@string/developer_mode_title" />
     </PreferenceCategory>
-
 </PreferenceScreen>

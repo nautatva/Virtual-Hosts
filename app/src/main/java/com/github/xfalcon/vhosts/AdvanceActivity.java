@@ -66,7 +66,7 @@ public class AdvanceActivity extends AppCompatActivity {
                             try {
                                 String result = HttpUtils.get(url_edit_text.getText().toString());
                                 FileUtils.writeFile(openFileOutput(VhostsActivity.NET_HOST_FILE, Context.MODE_PRIVATE), result);
-                                Toast.makeText(getApplication(), String.format(getString(R.string.down_success), DnsChange.handle_hosts(openFileInput(VhostsActivity.NET_HOST_FILE))), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplication(), String.format(getString(R.string.down_success), DnsChange.handle_hosts(openFileInput(VhostsActivity.NET_HOST_FILE), null)), Toast.LENGTH_LONG).show();
                                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = settings.edit();
                                 editor.putString(VhostsActivity.HOSTS_URL,url_edit_text.getText().toString());

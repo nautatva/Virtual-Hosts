@@ -16,6 +16,8 @@
 
 package com.github.xfalcon.vhosts.vservice;
 
+import static com.github.xfalcon.vhosts.VhostsActivity.PREFS_NAME;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -45,6 +47,8 @@ import com.github.xfalcon.vhosts.R;
 import com.github.xfalcon.vhosts.VhostsActivity;
 import com.github.xfalcon.vhosts.util.DnsServersDetector;
 import com.github.xfalcon.vhosts.util.LogUtils;
+import com.stealthcopter.networktools.SubnetDevices;
+import com.stealthcopter.networktools.subnet.Device;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -52,6 +56,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.Selector;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -162,12 +168,40 @@ public class VhostsService extends VpnService {
                 inputStream = getContentResolver().openInputStream(Uri.parse(uri_path));
             else inputStream = openFileInput(VhostsActivity.NET_HOST_FILE);
 
-            new Thread() {
-                public void run() {
-                    DnsChange.handle_hosts(inputStream);
-                }
-            }.start();
+            boolean checkForLocalHosts = true;  // todo: use a switch from settings
+            if (checkForLocalHosts){
+                // Asynchronously
+                SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
+                    @Override
+                    public void onDeviceFound(Device device) {
+                        // Stub: Found subnet device
+                        Log.d(TAG, "deviceFound: " + device.hostname + " " + device.ip);
+                    }
 
+                    @Override
+                    public void onFinished(ArrayList<Device> devicesFound) {
+                        // Stub: Finished scanning
+                        Log.i(TAG, "onFinished: " + devicesFound.size() + " devices found and adding to hosts");
+                        Map<String, String> extras = new HashMap<>();
+                        for (Device device:devicesFound) {
+                            // todo: android 10 gives hostname as IP, incorrect behavior of library.
+                            // track here: https://github.com/stealthcopter/AndroidNetworkTools/issues/87
+                            extras.put(device.hostname + ".local", device.ip);
+                        }
+                        new Thread() {
+                            public void run() {
+                                DnsChange.handle_hosts(inputStream, extras);
+                            }
+                        }.start();
+                    }
+                });
+            } else {
+                new Thread() {
+                    public void run() {
+                        DnsChange.handle_hosts(inputStream,null);
+                    }
+                }.start();
+            }
         } catch (Exception e) {
             LogUtils.e(TAG, "error setup host file service", e);
         }
